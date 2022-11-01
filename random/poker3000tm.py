@@ -41,6 +41,10 @@ def checkWinner(allHands, sharedCards):
     
 
 def texasHoldem(players):
+    print(▀█▀ █▀▀ ▀▄▀ ▄▀█ █▀   █░█ █▀█ █░░ █▀▄   ▀ █▀▀ █▀▄▀█)
+    print(░█░ ██▄ █░█ █▀█ ▄█   █▀█ █▄█ █▄▄ █▄▀   ░ ██▄ █░▀░█)
+    
+    
     handSize = 2
     sharedSize = 5
     playing = True
