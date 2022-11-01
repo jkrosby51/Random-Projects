@@ -32,10 +32,24 @@ def dealHand(num):
     for i in range(num - 1):
         hand.append(drawCard())
     return hand
-   
-for j in range(3): 
-    for i in range(5):
-        print(dealHand(5))
-        if resetDecks:
-            setDecks()
-    print()        
+
+def checkWinner()
+
+def poker(players):
+    handSize = 5
+    while playing: 
+        allHands
+        for i in range(players-1):
+            
+        print()   
+        print(f"{checkWinner()} wins the round!")
+        
+numPlayers = input("How many players? ")
+poker(numPlayers)
+
+    
+
+
+        
+    
+    
