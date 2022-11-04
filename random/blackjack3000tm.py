@@ -1,5 +1,5 @@
 #
-### blackjack3000tm
+### poker3000tm
 #
 
 ##  TO DO:
@@ -224,11 +224,13 @@ def checkWinner(allHands):
         if handVal(allHands[i]) > 21:
             if i == 0: 
                 print(f"The dealer went over 21.")
-                global dealerScore = dealerScore + 1
+                global playerScore 
+                playerScore = playerScore + 1
                 return("The player")
             elif i == 1:
                 print(f"The player went over 21.")
-                global dealerScore = dealerScore + 1
+                global dealerScore 
+                dealerScore = dealerScore + 1
                 return("The dealer")
     return(-1)
              
@@ -253,10 +255,12 @@ def blackJack(players):
     
     allHands = [dealerHand, playerHand]
     if checkWinner(allHands) != -1:
+        global dealerScore
+        global playerScore
         print(f"{checkWinner(allHands)} Wins!")
         print()
-        print(f"Dealer's Score: {global dealerScore})
-        print(f"Dealer's Score: {global playerScore})
+        print(f"Dealer's Score: {dealerScore})
+        print(f"Dealer's Score: {playerScore})
         break
       
     
