@@ -1,5 +1,5 @@
 #
-### blackjack3000tm
+# blackjack3000tm
 #
 
 ##  TO DO:
@@ -255,17 +255,16 @@ def checkBust(allHands):
     
 def checkWinner(allHands):
     scores = []
-    for i in range(allHands.len()):
+    for i in range(len(allHands)):
         scores.append(handVal(allHands[i]))
-    max_value = max(input_list)
-    index = input_list.index(max_value)
-    if index == 0:
+    if scores[0] >= scores[1]:
         return("The Dealer")
-    elif index == 1:
+    elif scores[1] > scores[0]:
         return("The Player")
              
 
 def blackJack(players):
+  badlyNamedBool = True
   dealerHand = dealHand(2)
   playerHand = dealHand(2)
 
@@ -285,14 +284,12 @@ def blackJack(players):
         break
     elif not badlyNamedBool:
         while handVal(dealerHand) <= 16:
-            dealerHand.append(drawCard)
+            dealerHand.append(drawCard())
             allHands = [dealerHand, playerHand]
             printCards(allHands)
         print(f"{checkWinner(allHands)} wins the hand!")
         winner = -1
-        
-        
-      
+    
     if handVal(dealerHand) <= 16:
       dealerHand.append(drawCard())
       
