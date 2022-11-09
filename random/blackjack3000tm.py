@@ -3,7 +3,7 @@
 #
 
 ##  TO DO:
-##  - finish singleplayer
+##  - add encasing while loop for playing another hand
 ##  - add support for multiple players
 ##  - add support for multiple AIs
 
@@ -254,13 +254,18 @@ def checkBust(allHands):
     return(-1)
     
 def checkWinner(allHands):
+    global dealerScore
+    global playerScore
     scores = []
     for i in range(len(allHands)):
         scores.append(handVal(allHands[i]))
     if scores[0] >= scores[1]:
+        dealerScore = dealerScore + 1
         return("The Dealer")
     elif scores[1] > scores[0]:
+        playerScore = playerScore + 1
         return("The Player")
+        
              
 
 def blackJack(players):
@@ -277,18 +282,24 @@ def blackJack(players):
     if winner != -1:
         global dealerScore
         global playerScore
+        print()
         print(f"{winner} Wins!")
         print()
         print(f"Dealer's Score: {dealerScore}")
         print(f"Player's Score: {playerScore}")
         break
-    elif not badlyNamedBool:
+    if not badlyNamedBool:
         while handVal(dealerHand) <= 16:
             dealerHand.append(drawCard())
             allHands = [dealerHand, playerHand]
             printCards(allHands)
+        print()
         print(f"{checkWinner(allHands)} wins the hand!")
+        print()
+        print(f"Dealer's Score: {dealerScore}")
+        print(f"Player's Score: {playerScore}")
         winner = -1
+        break
     
     if handVal(dealerHand) <= 16:
       dealerHand.append(drawCard())
