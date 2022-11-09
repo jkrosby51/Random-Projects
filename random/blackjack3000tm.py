@@ -1,5 +1,5 @@
 #
-### poker3000tm
+### blackjack3000tm
 #
 
 ##  TO DO:
@@ -66,10 +66,10 @@ cardCache = {
 }
 
 cardVal = {
-  'Ac': 1,
-  'Ad': 1,
-  'Ah': 1,
-  'As': 1,
+  'Ac': 11,
+  'Ad': 11,
+  'Ah': 11,
+  'As': 11,
   '2c': 2,
   '2d': 2,
   '2h': 2,
@@ -224,10 +224,18 @@ def printCards(allHands):
     print(f"Player: {str}]")
 
 def handVal(hand):
-  val = 0
-  for card in hand:
-    val = val + cardVal[card]
-  return val
+    val = 0
+    aces = 0
+    for card in hand:
+        if "A" in card:
+            aces = aces + 1
+
+    for card in hand:
+        val = val + cardVal[card]
+    for i in range(aces):
+        if val > 21:
+            val = val - 10
+    return val
 
 def checkBust(allHands):
     for i in range(2):
