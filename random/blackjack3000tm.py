@@ -213,15 +213,26 @@ def dealHand(num):
     hand.append(drawCard())
   return hand
   
-def printCards(allHands):
-    str = "[ x "
-    for card in allHands[0][1:]:
-      str = str + f"{card} "
-    print(f"Dealer: {str}]")
-    str = "[ "
-    for card in allHands[1]:
-      str = str + f"{card} "
-    print(f"Player: {str}]")
+def printCards(allHands, ifWin):
+    if not ifWin:
+        str = "[ x "
+        for card in allHands[0][1:]:
+          str = str + f"{card} "
+        print(f"Dealer: {str}]")
+        str = "[ "
+        for card in allHands[1]:
+          str = str + f"{card} "
+        print(f"Player: {str}]")
+    else:
+        str = "[ "
+        for card in allHands[0]:
+          str = str + f"{card} "
+        print(f"Dealer: {str}]")
+        str = "[ "
+        for card in allHands[1]:
+          str = str + f"{card} "
+        print(f"Player: {str}]")
+        
 
 def handVal(hand):
     val = 0
@@ -239,84 +250,113 @@ def handVal(hand):
 
 def checkBust(allHands):
     for i in range(2):
-        print(handVal(allHands[i]))
+        #print(handVal(allHands[i]))
         if handVal(allHands[i]) > 21:
             if i == 0: 
                 print(f"The dealer went over 21.")
                 global playerScore 
                 playerScore = playerScore + 1
-                return("The player")
+                return("The Player")
             elif i == 1:
                 print(f"The player went over 21.")
                 global dealerScore 
                 dealerScore = dealerScore + 1
-                return("The dealer")
+                return("The Dealer")
     return(-1)
     
 def checkWinner(allHands):
+    x = checkBust(allHands)
+    if x != -1:
+        return x
     global dealerScore
     global playerScore
     scores = []
     for i in range(len(allHands)):
         scores.append(handVal(allHands[i]))
-    if scores[0] >= scores[1]:
+    if scores[0] > scores[1]:
         dealerScore = dealerScore + 1
         return("The Dealer")
     elif scores[1] > scores[0]:
         playerScore = playerScore + 1
         return("The Player")
+    else:
+        if len(allHands[0]) <= len(allHands[1]):
+            dealerScore = dealerScore + 1
+            return("The Dealer")
+        else:
+            playerScore = playerScore + 1
+            return("The Player")
         
-             
-
 def blackJack(players):
-  badlyNamedBool = True
-  dealerHand = dealHand(2)
-  playerHand = dealHand(2)
-
   play = True
   while play:
-    allHands = [dealerHand, playerHand]
-    printCards(allHands)
-
-    winner = checkBust(allHands)
-    if winner != -1:
-        global dealerScore
-        global playerScore
-        print()
-        print(f"{winner} Wins!")
-        print()
-        print(f"Dealer's Score: {dealerScore}")
-        print(f"Player's Score: {playerScore}")
-        break
-    if not badlyNamedBool:
-        while handVal(dealerHand) <= 16:
-            dealerHand.append(drawCard())
-            allHands = [dealerHand, playerHand]
-            printCards(allHands)
-        print()
-        print(f"{checkWinner(allHands)} wins the hand!")
-        print()
-        print(f"Dealer's Score: {dealerScore}")
-        print(f"Player's Score: {playerScore}")
-        winner = -1
-        break
+      badlyNamedBool = True
+      dealerHand = dealHand(2)
+      playerHand = dealHand(2)
     
-    if handVal(dealerHand) <= 16:
-      dealerHand.append(drawCard())
-      
-    userInput = input("Hit? (y/n): ")
-    if userInput.lower() == 'no' or userInput.lower() == 'n':
-        badlyNamedBool = False
-    elif userInput.lower() == 'yes' or userInput.lower() == 'y':
-        badlyNamedBool = True
-    else:
-        print("That is not a valid response.")
+     
+      while True:
+        allHands = [dealerHand, playerHand]
+        printCards(allHands, False)
+    
+        winner = checkBust(allHands)
+        if winner != -1:
+            global dealerScore
+            global playerScore
+            print()
+            printCards(allHands, True)
+            print()
+            print(f"{winner} Wins!")
+            print()
+            print(f"Dealer's Score: {dealerScore}")
+            print(f"Player's Score: {playerScore}")
+            break
+        if not badlyNamedBool:
+            while handVal(dealerHand) <= 16:
+                dealerHand.append(drawCard())
+                allHands = [dealerHand, playerHand]
+                printCards(allHands, False)
+            print()
+            printCards(allHands, True)
+            print()
+            print(f"{checkWinner(allHands)} wins the hand!")
+            print()
+            print(f"Dealer's Score: {dealerScore}")
+            print(f"Player's Score: {playerScore}")
+            winner = -1
+            break
         
-    if badlyNamedBool: playerHand.append(drawCard())
+        if handVal(dealerHand) <= 16:
+          dealerHand.append(drawCard())
+        
+        userInput = "e"
+        while userInput.lower() not in ('y', 'n'):
+            userInput = input("Hit? (y/n): ")
+            if userInput.lower() == 'no' or userInput.lower() == 'n':
+                badlyNamedBool = False
+            elif userInput.lower() == 'yes' or userInput.lower() == 'y':
+                badlyNamedBool = True
+            else:
+                print("That is not a valid response.")
+            
+        if badlyNamedBool: playerHand.append(drawCard())
+        
+      print()
+      userInput = "e"
+      while userInput.lower() not in ('y', 'n'):
+        userInput = input("Play another hand? (y/n): ")
+        if userInput.lower() == 'n':
+            play = False
+            print()
+            print(f"Final score:")
+            print(f"Dealer: {dealerScore}")
+            print(f"Player: {playerScore}")
+            print()
+        elif userInput.lower() == 'y':
+            play = True 
+        else:
+            print("That is not a valid response.")
       
-
-    
-  
 
 
 numPlayers = input("How many players? ")
