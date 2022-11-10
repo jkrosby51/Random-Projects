@@ -3,9 +3,9 @@
 #
 
 ##  TO DO:
-##  - add encasing while loop for playing another hand
-##  - add support for multiple players
-##  - add support for multiple AIs
+##  - Fully integrate player manager `players[]`
+##      - Replace usage of `allHands[]`
+##      - Replace hard coding of Dealer and Player with players[i]
 
 import random
 
@@ -287,12 +287,20 @@ def checkWinner(allHands):
             playerScore = playerScore + 1
             return("The Player")
         
-def blackJack(players):
+def blackJack(playerCount):
+    players = [["Dealer", 0, []]]
+
+    inputCheck = False
+    
+    for i in range(playerCount+1):
+        ### [Name, Score, hand]
+        players.append([f"Player {i+1}", 0, []])
+        #print(players[i])
   play = True
   while play:
       badlyNamedBool = True
-      dealerHand = dealHand(2)
-      playerHand = dealHand(2)
+      for player in players:
+          player[2] = dealHand(2)
     
      
       while True:
@@ -358,7 +366,13 @@ def blackJack(players):
             print("That is not a valid response.")
       
 
-
-numPlayers = input("How many players? ")
-print()
-blackJack(int(numPlayers))
+inputCheck = False
+while not inputCheck:
+    try:
+        playerCount = int(input("How many players? (1-8): "))
+        if playerCount > 0 and playerCount < 9:
+            inputCheck = True
+        else: print("Must be within 1-8.")
+    except: print("Must be an Integer 1-8.")
+    
+blackJack(int(playerCount))
