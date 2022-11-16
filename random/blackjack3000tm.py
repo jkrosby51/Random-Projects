@@ -3,9 +3,7 @@
 #
 
 ##  TO DO:
-##  - Fully integrate player manager `players[]`
-##      - Replace usage of `allHands[]`
-##      - Replace hard coding of Dealer and Player with players[i]
+##  - fix bugs
 
 import random
 
@@ -131,16 +129,6 @@ while resetDecks != True and resetDecks != False:
         print("That is not a valid response.")
 """
 
-dealerScore = 0
-playerScore = 0
-
-"""
-class Player:
-  def __init__(self, name, score):
-    self.name = name
-    self.score = 0
-"""
-
 def setDecks():
   global cardCache
   cardCache = {
@@ -213,25 +201,27 @@ def dealHand(num):
     hand.append(drawCard())
   return hand
   
-def printCards(allHands, ifWin):
+def printCards(players, ifWin):
     if not ifWin:
         str = "[ x "
-        for card in allHands[0][1:]:
+        for card in players[0][2][1:]:
           str = str + f"{card} "
-        print(f"Dealer: {str}]")
-        str = "[ "
-        for card in allHands[1]:
-          str = str + f"{card} "
-        print(f"Player: {str}]")
+        print(f"{players[0][0]}: {str}]")
+        for i in range(len(players)-1):
+            str = "[ "
+            for card in players[i+1][2]:
+              str = str + f"{card} "
+            print(f"{players[i+1][0]}: {str}]")
     else:
         str = "[ "
-        for card in allHands[0]:
-          str = str + f"{card} "
-        print(f"Dealer: {str}]")
-        str = "[ "
-        for card in allHands[1]:
-          str = str + f"{card} "
-        print(f"Player: {str}]")
+        for card in players[0][2]:
+          str = str + (f"{card} ")
+        print(f"{players[0][0]}: {str}]")
+        for i in range(len(players)-1):
+            str = "[ "
+            for card in players[i+1][2]:
+              str = str + f"{card} "
+            print(f"{players[i+1][0]}: {str}]")
         
 
 def handVal(hand):
@@ -248,31 +238,28 @@ def handVal(hand):
             val = val - 10
     return val
 
-def checkBust(allHands):
-    for i in range(2):
-        #print(handVal(allHands[i]))
-        if handVal(allHands[i]) > 21:
+def checkBust(players):
+    for i in range(len(players)):
+        #print(handVal(players[i][2]))
+        if handVal(players[i][2]) > 21:
             if i == 0: 
                 print(f"The dealer went over 21.")
-                global playerScore 
-                playerScore = playerScore + 1
-                return("The Player")
+                for player in players:
+                    player[1] = player[1] + 1
+                return(player[0])
             elif i == 1:
                 print(f"The player went over 21.")
-                global dealerScore 
-                dealerScore = dealerScore + 1
+                players[0][1] = players[0][1] + 1
                 return("The Dealer")
     return(-1)
     
-def checkWinner(allHands):
-    x = checkBust(allHands)
+def checkWinner(players):
+    x = checkBust(players)
     if x != -1:
         return x
-    global dealerScore
-    global playerScore
     scores = []
-    for i in range(len(allHands)):
-        scores.append(handVal(allHands[i]))
+    for i in range(len(players)):
+        scores.append(handVal(players[i][2]))
     if scores[0] > scores[1]:
         dealerScore = dealerScore + 1
         return("The Dealer")
@@ -280,7 +267,7 @@ def checkWinner(allHands):
         playerScore = playerScore + 1
         return("The Player")
     else:
-        if len(allHands[0]) <= len(allHands[1]):
+        if len(players[i][2]) <= len(players[i+1][2]):
             dealerScore = dealerScore + 1
             return("The Dealer")
         else:
@@ -292,62 +279,59 @@ def blackJack(playerCount):
 
     inputCheck = False
     
-    for i in range(playerCount+1):
+    for i in range(playerCount):
         ### [Name, Score, hand]
         players.append([f"Player {i+1}", 0, []])
         #print(players[i])
-  play = True
-  while play:
+    play = True
+    while play:
       badlyNamedBool = True
       for player in players:
           player[2] = dealHand(2)
     
      
       while True:
-        allHands = [dealerHand, playerHand]
-        printCards(allHands, False)
+        printCards(players, False)
     
-        winner = checkBust(allHands)
+        winner = checkBust(players)
         if winner != -1:
-            global dealerScore
-            global playerScore
             print()
-            printCards(allHands, True)
+            printCards(players, True)
             print()
             print(f"{winner} Wins!")
             print()
-            print(f"Dealer's Score: {dealerScore}")
-            print(f"Player's Score: {playerScore}")
+            for player in players:
+                print(f"{player[0]}'s Score: {player[1]}")
             break
         if not badlyNamedBool:
-            while handVal(dealerHand) <= 16:
-                dealerHand.append(drawCard())
-                allHands = [dealerHand, playerHand]
-                printCards(allHands, False)
+            while handVal(players[0][2]) <= 16:
+                players[0][2].append(drawCard())
+                printCards(players, False)
             print()
-            printCards(allHands, True)
+            printCards(players, True)
             print()
-            print(f"{checkWinner(allHands)} wins the hand!")
+            print(f"{checkWinner(players)} wins the hand!")
             print()
-            print(f"Dealer's Score: {dealerScore}")
-            print(f"Player's Score: {playerScore}")
+            for player in players:
+                print(f"{player[0]}'s Score: {player[1]}")
             winner = -1
             break
         
-        if handVal(dealerHand) <= 16:
-          dealerHand.append(drawCard())
+        if handVal(players[0][2]) <= 16:
+          players[0][2].append(drawCard())
         
-        userInput = "e"
-        while userInput.lower() not in ('y', 'n'):
-            userInput = input("Hit? (y/n): ")
-            if userInput.lower() == 'no' or userInput.lower() == 'n':
-                badlyNamedBool = False
-            elif userInput.lower() == 'yes' or userInput.lower() == 'y':
-                badlyNamedBool = True
-            else:
-                print("That is not a valid response.")
-            
-        if badlyNamedBool: playerHand.append(drawCard())
+        for i in range(len(players)-1):
+            userInput = "e"
+            while userInput.lower() not in ('y', 'n'):
+                userInput = input(f"{players[i+1][0]}, Hit? (y/n): ")
+                if userInput.lower() == 'no' or userInput.lower() == 'n':
+                    badlyNamedBool = False
+                elif userInput.lower() == 'yes' or userInput.lower() == 'y':
+                    badlyNamedBool = True
+                else:
+                    print("That is not a valid response.")
+            if badlyNamedBool: 
+                players[i+1][2].append(drawCard())
         
       print()
       userInput = "e"
@@ -357,8 +341,8 @@ def blackJack(playerCount):
             play = False
             print()
             print(f"Final score:")
-            print(f"Dealer: {dealerScore}")
-            print(f"Player: {playerScore}")
+            for player in players:
+                print(f"{player[0]}'s Score: {player[1]}")
             print()
         elif userInput.lower() == 'y':
             play = True 
