@@ -13,11 +13,15 @@ def printBoard(board):
   print("   0   1   2   3   4   5   6")
 
 def findLowest(board, x):
-  for y in range(5, 0, -1):
+  for y in range(5, -1, -1):
     #print(f"board[x][y] == {board[x][y]}")
     if board[y][x] == "_":
       return y
   return -1
+
+def checkWin(board):
+  
+  return False
 
 while True:
   board = setBoard()
@@ -44,6 +48,8 @@ while True:
     board[findLowest(board, userInput)][userInput] = 'X'
 
     printBoard(board)
+    if(checkWin(board)):
+      break
     
     badlyNamedBool = True
     while badlyNamedBool == True:
